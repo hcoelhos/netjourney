@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetJourney — Aprenda como a Internet funciona</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="2.4" fill="#04120f"/>
+          <path d="M12 4.4V9.6M12 14.4V19.6M4.4 12H9.6M14.4 12H19.6" stroke="#04120f" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="4" r="1.6" fill="#04120f"/>
+          <circle cx="12" cy="20" r="1.6" fill="#04120f"/>
+          <circle cx="4" cy="12" r="1.6" fill="#04120f"/>
+          <circle cx="20" cy="12" r="1.6" fill="#04120f"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>NetJourney</h1>
+        <span>Acompanhe uma requisição do seu computador até o servidor</span>
+      </div>
+    </div>
+
+    <nav class="mode-nav" id="modeNav">
+      <button class="mode-btn active" data-mode="simulacao">Simulação</button>
+      <button class="mode-btn" data-mode="missoes">Missões</button>
+      <button class="mode-btn" data-mode="quiz">Quiz</button>
+      <button class="mode-btn" data-mode="professor">Painel do Professor</button>
+      <button class="mode-btn" data-mode="manual">Manual</button>
+    </nav>
+
+    <div class="header-right">
+      <span class="level-chip" id="headerLevelChip">⭐ Estagiário de TI · 0 XP</span>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menu">☰</button>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN AREA ===================== -->
+  <div class="main-area">
+
+    <!-- ---------- STAGE: Simulação ---------- -->
+    <section class="view active stage-view" id="view-simulacao">
+      <div class="stage">
+
+        <div class="scenario-bar" id="scenarioBar">
+          <span class="dot" id="scenarioDot"></span>
+          <span class="label">Cenário</span>
+          <span class="msg" id="scenarioMsg">Clique em "Iniciar jornada" para acompanhar a requisição passo a passo, ou clique em um equipamento para inspecioná-lo.</span>
+          <span class="url-chip">www.ifms.edu.br</span>
+        </div>
+
+        <div class="proto-legend">
+          <span class="proto-chip" style="--c:var(--proto-dns)">DNS</span>
+          <span class="proto-chip" style="--c:var(--proto-arp)">ARP</span>
+          <span class="proto-chip" style="--c:var(--proto-tcp)">TCP</span>
+          <span class="proto-chip" style="--c:var(--proto-http)">HTTP</span>
+        </div>
+
+        <div class="topology-wrap">
+          <svg id="topologySvg" viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama da topologia de rede"></svg>
+
+          <!-- Equipment inspector (slides up from bottom) -->
+          <div class="inspector" id="inspector">
+            <div class="inspector-head">
+              <div>
+                <h3 id="inspTitle">—</h3>
+                <span class="layer-tag" id="inspLayer">—</span>
+              </div>
+              <button class="inspector-close" id="inspClose" aria-label="Fechar inspetor">✕</button>
+            </div>
+            <p class="inspector-desc" id="inspDesc"></p>
+            <div id="inspBody"></div>
+          </div>
+        </div>
+
+        <div class="sim-controls">
+          <div class="sim-controls-left">
+            <button class="btn primary" id="simPlayBtn">▶ Iniciar jornada</button>
+            <button class="btn" id="simNextBtn">⏭ Próximo passo</button>
+            <button class="btn ghost" id="simResetBtn">↺ Reiniciar</button>
+          </div>
+          <div class="sim-controls-right">
+            <label class="speed-label" for="simSpeed">Velocidade</label>
+            <select id="simSpeed" class="speed-select">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+            </select>
+            <span class="sim-progress" id="simProgress">Passo 0 de 0</span>
+          </div>
+        </div>
+        <div class="sim-progress-track"><div class="sim-progress-fill" id="simProgressFill"></div></div>
+
+      </div>
+    </section>
+
+    <!-- ---------- Placeholder views for future layers ---------- -->
+    <section class="view" id="view-missoes">
+      <div class="missions-view">
+        <div class="missions-head" id="missionListHead">
+          <h2>Missões investigativas</h2>
+          <p>A rede não está funcionando como deveria. Inspecione os equipamentos, descubra a causa e proponha a correção — exatamente como um técnico de suporte faria.</p>
+          <div class="missions-progress">
+            <div class="missions-progress-track"><div class="missions-progress-fill" id="missionsProgressFill"></div></div>
+            <span class="missions-progress-label" id="missionsProgressLabel">0 de 5 concluídas</span>
+          </div>
+        </div>
+
+        <div class="mission-grid" id="missionGrid"></div>
+
+        <div class="mission-workspace" id="missionWorkspace"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-quiz">
+      <div class="quiz-view">
+
+        <div class="quiz-progress-card">
+          <div class="xp-level-row">
+            <span class="xp-level-badge" id="quizLevelBadge">Nível 1 — Estagiário de TI</span>
+            <span class="xp-count" id="quizXpCount">0 XP</span>
+          </div>
+          <div class="xp-track"><div class="xp-fill" id="quizXpFill"></div></div>
+          <div class="xp-next" id="quizXpNext"></div>
+          <div class="achv-grid" id="achievementGrid"></div>
+        </div>
+
+        <div class="quiz-head">
+          <h2>Quiz inteligente</h2>
+          <p>12 questões cobrindo os conceitos explorados na Simulação e nas Missões: equipamentos, IP e MAC, ARP, DNS, gateway/roteamento, TCP e HTTP.</p>
+        </div>
+
+        <div id="quizList"></div>
+
+        <div class="btn-row">
+          <button class="btn primary" onclick="NetJourneyQuiz.submit()">Corrigir quiz</button>
+          <button class="btn ghost" onclick="NetJourneyQuiz.reset()">↺ Refazer</button>
+        </div>
+        <div id="quizScoreBox"></div>
+
+      </div>
+    </section>
+
+    <section class="view" id="view-professor">
+      <div class="teacher-view" id="teacherView"></div>
+    </section>
+
+    <section class="view" id="view-manual">
+      <div class="manual-view">
+        <div class="manual-tabs">
+          <button class="manual-tab active" data-tab="professor" onclick="NetJourneyUI.switchManualTab('professor')">Manual do Professor</button>
+          <button class="manual-tab" data-tab="aluno" onclick="NetJourneyUI.switchManualTab('aluno')">Manual do Aluno</button>
+        </div>
+
+        <div class="manual-panel active" id="manual-professor">
+          <h2>Manual do Professor</h2>
+
+          <h3>O que é o NetJourney</h3>
+          <p>O NetJourney é um objeto de aprendizagem interativo que ensina, de forma visual e investigativa, como uma requisição HTTP percorre uma rede real — do computador do usuário até o servidor web, passando por switch, roteador e Internet, com os protocolos ARP, DNS, TCP e HTTP em ação.</p>
+
+          <h3>Objetivos de aprendizagem</h3>
+          <p>Ao final, o aluno é capaz de: explicar o papel de cada equipamento de rede; diferenciar endereço IP de endereço MAC; compreender ARP, DNS, gateway e roteamento; entender o three-way handshake do TCP e o ciclo de requisição/resposta HTTP; e diagnosticar problemas comuns de configuração de rede.</p>
+
+          <h3>Público-alvo e pré-requisitos</h3>
+          <p>Estudantes de Ensino Técnico em Informática, cursos de graduação em Computação/TI, ou disciplinas de Redes de Computadores. Não é necessário conhecimento prévio de redes — o objeto parte do zero — mas noções básicas de como um computador funciona ajudam.</p>
+
+          <h3>Roteiro de aula sugerido (50–60 min)</h3>
+          <ol>
+            <li><strong>Abertura guiada (10 min):</strong> projete a aba "Simulação" na turma, use "Próximo passo" manualmente e pause em cada fase (DNS, ARP, TCP, HTTP) para explicar o conceito antes de avançar.</li>
+            <li><strong>Exploração livre (10 min):</strong> alunos, individualmente ou em duplas, abrem a aba "Simulação" nos próprios computadores e clicam nos equipamentos para explorar o inspetor.</li>
+            <li><strong>Missões investigativas (20 min):</strong> alunos resolvem as 5 missões da aba "Missões" — recomenda-se circular pela sala observando quem trava em qual conceito.</li>
+            <li><strong>Quiz individual (10 min):</strong> aba "Quiz", como fechamento e autoavaliação.</li>
+            <li><strong>Encerramento (5–10 min):</strong> alguns alunos mostram seu Painel do Professor e certificado; discussão coletiva das missões que mais geraram dúvida.</li>
+          </ol>
+
+          <h3>Usando o Painel do Professor</h3>
+          <p>Cada aluno, no próprio navegador, tem acesso a um painel individual com tempo de uso, missões concluídas, histórico de tentativas no quiz e nível/medalhas conquistadas. Como o NetJourney roda inteiramente no navegador (sem servidor), <strong>este painel reflete apenas o uso feito naquele navegador</strong> — não existe um dashboard central de turma.</p>
+          <p>Para coletar o desempenho de todos os alunos, oriente-os a usar o botão <strong>"Exportar relatório"</strong> na aba Painel do Professor ao final da aula: ele baixa um arquivo <code>.json</code> com o resumo de desempenho, que pode ser recolhido (por e-mail, pasta compartilhada, ou Google Classroom) e consolidado manualmente ou com uma planilha simples.</p>
+
+          <h3>Avaliação sugerida</h3>
+          <p>Uma composição possível: 40% conclusão das 5 missões, 40% nota do quiz, 20% participação na simulação guiada. O certificado gerado ao final mostra o aproveitamento no quiz e o tempo total de uso, podendo ser impresso ou salvo em PDF como evidência de conclusão.</p>
+
+          <h3>Requisitos técnicos e limitações</h3>
+          <ul>
+            <li>Funciona 100% offline, em qualquer navegador moderno — basta abrir o arquivo <code>index.html</code>, sem instalação nem servidor.</li>
+            <li>O progresso é salvo no armazenamento local do navegador (localStorage). Limpar os dados de navegação do navegador apaga o progresso.</li>
+            <li>Por ser client-side, não há um banco de dados central: cada dispositivo/navegador guarda seu próprio progresso.</li>
+            <li>Compatível com projeção em telão, notebooks da sala de informática ou celulares dos próprios alunos (layout responsivo).</li>
+          </ul>
+        </div>
+
+        <div class="manual-panel" id="manual-aluno">
+          <h2>Manual do Aluno</h2>
+
+          <h3>O que você vai aprender</h3>
+          <p>Como uma requisição sai do seu computador, atravessa a rede local e a Internet, e volta com a página que você pediu — e o papel de cada "personagem" nesse processo: switch, roteador, DNS, ARP, TCP e HTTP.</p>
+
+          <h3>Como navegar</h3>
+          <ul>
+            <li><strong>Simulação:</strong> clique em "Iniciar jornada" para ver um pacote de dados percorrer a rede de verdade, mudando de protocolo a cada etapa. Clique em qualquer equipamento (computador, switch, roteador, nuvem, servidor) para inspecionar sua configuração.</li>
+            <li><strong>Missões:</strong> 5 problemas de rede para você diagnosticar e corrigir, como um técnico de suporte faria. Leia o relato do usuário, inspecione os equipamentos, escolha a causa correta e proponha a correção.</li>
+            <li><strong>Quiz:</strong> 12 perguntas para testar o que você aprendeu, com explicação após cada resposta.</li>
+            <li><strong>Painel do Professor:</strong> seu relatório pessoal de progresso — e de lá você gera seu certificado.</li>
+          </ul>
+
+          <h3>Dica para as missões</h3>
+          <p>A resposta nunca é entregue de bandeja: compare os dados de dois equipamentos que deveriam "combinar" (por exemplo, o gateway configurado no computador deveria ser exatamente o IP do roteador na LAN). A pista está sempre nessa comparação.</p>
+
+          <h3>Como funciona a pontuação</h3>
+          <p>Você ganha XP ao completar a jornada de simulação, resolver missões e acertar questões do quiz (com bônus por sequências de acertos). O XP acumulado sobe seu nível — de "Estagiário de TI" até "Arquiteto de Redes" — e desbloqueia medalhas, algumas exigindo domínio completo de um tópico (como acertar todas as perguntas de ARP ou TCP no quiz).</p>
+
+          <h3>Seu certificado</h3>
+          <p>Depois de explorar a simulação, resolver as missões e fazer o quiz, vá até "Painel do Professor" → "Certificado de Conclusão", digite seu nome e clique em imprimir (ou salvar como PDF) para guardar como registro da conclusão.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- LOG SIDEBAR (Wireshark-style) ---------- -->
+    <aside class="log-panel" id="logPanel">
+      <div class="log-head">
+        <h2>Log de Eventos</h2>
+        <span class="sub">registro cronológico do tráfego</span>
+      </div>
+      <div class="log-body" id="logBody">
+        <div class="log-empty" id="logEmpty">Nenhum evento ainda.<br>A simulação de tráfego chega na próxima etapa.</div>
+      </div>
+      <div class="log-controls">
+        <button class="btn small" id="logClearBtn">Limpar log</button>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<div class="toast-stack" id="gameToastStack"></div>
+
+<script src="js/devices-data.js"></script>
+<script src="js/topology.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/missions-data.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/quiz-data.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/teacher-panel.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
